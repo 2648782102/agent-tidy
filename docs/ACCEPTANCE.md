@@ -31,7 +31,7 @@ OK：已检查 4 个路径 · 2 个 host · 没有发现高置信、可操作的
 
 No fix was applied to the real configuration. The HTML report was written locally only. JSON mode intentionally omits `reportPath` because no report is written in that mode.
 
-A second real setup was inspected read-only by pointing `--cwd` at a project containing `.codex/config.toml` and `AGENTS.md` while retaining the current user's global Codex configuration. The scan inspected 6 paths across 2 hosts and found one high-confidence `duplicate-mcp` finding, with one available fix and no unsupported items. A SHA-256 hash of the project config before and after the scan was identical, confirming that no host configuration was written. Only redacted paths, check IDs, severities, and fix counts are recorded here. No `apply` was run against either real setup.
+A second real setup was first inspected read-only by pointing `--cwd` at a project containing `.codex/config.toml` and `AGENTS.md` while retaining the current user's global Codex configuration. The scan inspected 6 paths across 2 hosts and found one high-confidence `duplicate-mcp` finding, with one available fix and no unsupported items. A SHA-256 hash of the project config before and after the scan was identical, confirming that no host configuration was written. Only redacted paths, check IDs, severities, and fix counts are recorded here.
 
 The same second setup was then used for a real, reversible fix/undo acceptance run with an isolated temporary `--data-dir`. `fix --json` produced one preview-only write change for the project-local `config.toml`; `apply --json` applied that single change, leaving the user's global `config.toml` and project `AGENTS.md` byte-identical. `undo --json` restored the project config to its original bytes. A post-undo scan again found the same `duplicate-mcp` finding, confirming that undo restored the previous configuration rather than hiding the issue. The project's Git status remained clean, no `.agent-tidy-disabled` residue remained, and the temporary transaction store was outside both the project and the user's configuration directories.
 
@@ -70,7 +70,7 @@ agent-tidy scan
 
 To remove the linked command, run `npm unlink -g agent-tidy` from another directory. For a packaged install, use `npm install -g <tarball-or-package>` and remove it with `npm uninstall -g agent-tidy`. `agent-tidy` does not create files inside Git repositories it scans; local reports, pending plans, and transaction snapshots are stored under `~/.local/share/agent-tidy` by default or under `--data-dir`. After `undo` and a final visual review, that directory can be removed with `rm -rf ~/.local/share/agent-tidy` if the user wants no retained local data. Removal of the tool does not automatically delete those files.
 
-This is a repeatable, synthetic-fixture install/uninstall and retention procedure. It does not replace the pending second real personal setup validation.
+This is a repeatable, synthetic-fixture install/uninstall and retention procedure. The real-config fix/undo validation below is separate from these synthetic fixtures.
 
 ## Publication decision
 
