@@ -18,7 +18,7 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/cli.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --import tsx --test tests/**/*.test.ts",
+    "test": "node --import tsx --test tests/adapters.test.ts tests/all-checks.test.ts tests/check-coverage.test.ts tests/checks.test.ts tests/cli.test.ts tests/preflight.test.ts tests/real-config-copy.test.ts tests/redaction.test.ts tests/regressions.test.ts tests/toml-blocks.test.ts tests/transactions.test.ts",
     "check": "npm run typecheck && npm run test && npm run build",
     "prepack": "npm run build"
   },

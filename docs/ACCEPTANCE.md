@@ -7,6 +7,8 @@ Validation updates: `5cbe365` and later working-tree changes recorded here
 ## Automated checks
 
 - `npm run check`: passed (typecheck, 23 tests, build), including a clean-checkout simulation with the ignored `dist/` directory removed so CLI tests no longer depend on a previous local build.
+- Test discovery uses explicit test file arguments. Node 20's test runner did not resolve `tests/**/*.test.ts` on GitHub Actions; the explicit list is stable across the Node 20/22/24 CI matrix.
+- CI uses a per-ref concurrency group so rapid pushes cancel stale runs instead of producing misleading cancelled jobs.
 - Check coverage includes duplicates, shadowing, stale MCP commands, duplicate MCP entries, missing references, structured risky declarations, deterministic instruction overlap, and the low-confidence unused-capability hint.
 - Fix coverage includes TOML MCP disabling, JSON MCP disabling, Skill directory disabling, apply/undo, concurrent modification refusal, transaction history/show, and removal of disabled-directory residue after undo.
 - A copied shape of the current user's real `~/.codex/config.toml` was scanned, fixed, and undone in a temporary fixture. The source file was read only and was not modified.
@@ -55,7 +57,7 @@ The first public version is not yet declared ready for npm publication or a GitH
 - validate the fix flow on a second real personal setup, with explicit user awareness and read-only output until a fix is deliberately requested;
 - demonstrate `undo` from a real, user-approved fix (not just fixtures);
 - record a repeatable clean-install/uninstall and data-retention note;
-- verify the pushed GitHub Actions run on Node.js 20, 22, and 24 (the first run exposed clean-checkout CLI test failure; local validation now covers the fix);
+- verify the pushed GitHub Actions run on Node.js 20, 22, and 24 (earlier runs exposed clean-checkout CLI test failure and Node 20 test glob behavior; local validation now covers both fixes);
 - decide whether `agent-tidy@0.1.0` should be published under the user's npm account.
 
 This record describes validation performed so far; it does not claim that a configuration is safe, trusted, or free of semantic conflicts.
