@@ -125,10 +125,7 @@ export interface Roots {
 export type FixKind =
   | "disable-mcp-toml"
   | "disable-mcp-json"
-  | "disable-plugin-toml"
-  | "disable-plugin-json"
-  | "disable-skill-dir"
-  | "disable-skill-codex-config";
+  | "disable-skill-dir";
 
 export interface Fix {
   id: string;

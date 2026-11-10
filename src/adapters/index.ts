@@ -424,7 +424,7 @@ export class ClaudeCodeAdapter implements HostAdapter {
             ...(command ? { command } : {}),
             path: hookPath ?? command ?? path,
             source: source("claude-code", scope, path, label, text, event, `hooks.${event}`),
-            capabilities: command ? detectCapabilities(command, path) : [],
+            capabilities: command ? detectCapabilities(`command: ${command}\n`, path) : [],
             enabled: true,
           });
         }

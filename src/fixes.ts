@@ -66,19 +66,6 @@ function encodeBase64(bytes: Uint8Array | string): string {
   return Buffer.from(bytes).toString("base64");
 }
 
-function setJsonPath(root: JsonObject, path: string[], value: unknown): boolean {
-  let current: JsonObject = root;
-  for (const key of path.slice(0, -1)) {
-    const next = current[key];
-    if (!isJsonObject(next)) return false;
-    current = next;
-  }
-  const last = path.at(-1);
-  if (!last) return false;
-  current[last] = value;
-  return true;
-}
-
 function findJsonKeyPath(root: unknown, targetKey: string, path: string[] = []): string[] | undefined {
   if (!isJsonObject(root)) return undefined;
   for (const [key, value] of Object.entries(root)) {
@@ -129,38 +116,6 @@ async function planSingleFix(fix: Fix, inventory: Inventory, finding: Finding): 
     for (const key of parentPath) current = isJsonObject(current) ? current[key] : undefined;
     if (!isJsonObject(current) || !name || !isJsonObject(current[name])) throw new Error(`找不到 MCP 配置：${name ?? fix.targetId}`);
     current[name] = { ...current[name], disabled: true };
-    const after = `${JSON.stringify(json, null, 2)}\n`;
-    return [{
-      path,
-      operation: "write-file",
-      ...(before.hash ? { beforeHash: before.hash } : {}),
-      afterBytesBase64: encodeBase64(after),
-      afterHash: hashBytes(after),
-      rationale: fix.description,
-      findingId: finding.id,
-    }];
-  }
-
-  if (fix.kind === "disable-plugin-toml") {
-    const after = (text ?? "").replace(/^(\s*enabled\s*=\s*)true\b/m, "$1false");
-    if (after === text) throw new Error(`未找到可禁用的插件开关：${path}`);
-    return [{
-      path,
-      operation: "write-file",
-      ...(before.hash ? { beforeHash: before.hash } : {}),
-      afterBytesBase64: encodeBase64(after),
-      afterHash: hashBytes(after),
-      rationale: fix.description,
-      findingId: finding.id,
-    }];
-  }
-
-  if (fix.kind === "disable-plugin-json") {
-    const json = await readJsonSafe<JsonObject>(path);
-    if (!json) throw new Error(`无法解析 JSON：${path}`);
-    const name = inventory.plugins.find((plugin) => plugin.id === fix.targetId)?.name;
-    const keyPath = name ? findJsonKeyPath(json, name) : undefined;
-    if (!setJsonPath(json, keyPath ?? [], false)) throw new Error(`无法禁用插件：${name ?? fix.targetId}`);
     const after = `${JSON.stringify(json, null, 2)}\n`;
     return [{
       path,

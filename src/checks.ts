@@ -61,16 +61,7 @@ function disableFix(record: FixableRecord): Fix | undefined {
     };
   }
   if ("event" in record) return undefined;
-  if (field === "enabledPlugins" || sourcePath.endsWith(".toml")) {
-    return {
-      id: stableId("fix", ["disable-plugin", record.id, field]),
-      kind: sourcePath.endsWith(".toml") ? "disable-plugin-toml" : "disable-plugin-json",
-      label: `禁用插件 ${record.name}`,
-      targetPath: sourcePath,
-      targetId: record.id,
-      description: "将配置中的插件条目标记为 disabled，不删除原配置",
-    };
-  }
+  if ("manifestPath" in record) return undefined;
   return undefined;
 }
 
@@ -290,8 +281,8 @@ function instructionOverlap(inventory: Inventory): Finding[] {
 
 function unusedCapabilities(inventory: Inventory): Finding[] {
   const findings: Finding[] = [];
-  const candidates = activeMcps(inventory.mcps).filter((mcp) => mcp.environmentKeys.length > 0);
-  if (candidates.length < 6) return findings;
+  const candidates = activeMcps(inventory.mcps).filter((mcp) => mcp.environmentKeys.some((key) => /(?:TOKEN|SECRET|PASSWORD|KEY|CREDENTIAL|AUTH)/i.test(key)));
+  if (candidates.length < 5) return findings;
   findings.push({
     id: findingId("unused-capability", candidates.map((item) => item.id)),
     checkId: "unused-capability",
