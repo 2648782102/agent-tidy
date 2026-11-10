@@ -10,7 +10,7 @@ Status: implementation in progress. Dates are relative milestones, not commitmen
 - Phase 3 complete in code for local sources: `add <local-dir>` preflight compares names/MCP entries and reports structured risks without executing installers. Pinned GitHub sources are explicitly deferred to a later decision.
 - Phase 4 remains intentionally out of scope for the first public version.
 
-Publishing is gated by a second real personal setup validation, an explicitly approved real fix/undo demonstration, and release notes. Clean-install, global-install, and fixture transaction smoke tests are already recorded in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). The current CLI is usable locally but is not yet published as an npm package or GitHub release.
+Engineering acceptance is recorded in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md): second real setup, real fix/undo, clean install, global install, and CI. Publication now waits only for the user's npm account decision and release notes. The current CLI is usable locally but is not yet published as an npm package or GitHub release.
 
 ## Decision gates
 

@@ -78,7 +78,7 @@ A future npm/GitHub release must include:
 - a reproducible build process;
 - known limits in release notes.
 
-Phase 2 transaction safety and Phase 3 local-source preflight are implemented and covered by automated tests. Clean-install and global-install smoke tests are recorded in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). Publishing remains intentionally deferred until a second real personal setup and an explicitly approved real fix/undo flow are validated.
+Phase 2 transaction safety and Phase 3 local-source preflight are implemented and covered by automated tests. Clean-install, global-install, second real setup, and real fix/undo validation are recorded in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). Publication remains intentionally deferred until the user explicitly decides to publish under their npm account.
 
 ## Decision log
 

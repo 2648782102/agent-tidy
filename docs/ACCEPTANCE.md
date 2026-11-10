@@ -33,6 +33,8 @@ No fix was applied to the real configuration. The HTML report was written locall
 
 A second real setup was inspected read-only by pointing `--cwd` at a project containing `.codex/config.toml` and `AGENTS.md` while retaining the current user's global Codex configuration. The scan inspected 6 paths across 2 hosts and found one high-confidence `duplicate-mcp` finding, with one available fix and no unsupported items. A SHA-256 hash of the project config before and after the scan was identical, confirming that no host configuration was written. Only redacted paths, check IDs, severities, and fix counts are recorded here. No `apply` was run against either real setup.
 
+The same second setup was then used for a real, reversible fix/undo acceptance run with an isolated temporary `--data-dir`. `fix --json` produced one preview-only write change for the project-local `config.toml`; `apply --json` applied that single change, leaving the user's global `config.toml` and project `AGENTS.md` byte-identical. `undo --json` restored the project config to its original bytes. A post-undo scan again found the same `duplicate-mcp` finding, confirming that undo restored the previous configuration rather than hiding the issue. The project's Git status remained clean, no `.agent-tidy-disabled` residue remained, and the temporary transaction store was outside both the project and the user's configuration directories.
+
 ## End-to-end fixture workflow
 
 A temporary fixture with one stale MCP command and two duplicate Skills was used to run:
@@ -70,12 +72,10 @@ To remove the linked command, run `npm unlink -g agent-tidy` from another direct
 
 This is a repeatable, synthetic-fixture install/uninstall and retention procedure. It does not replace the pending second real personal setup validation.
 
-## Remaining publication gates
+## Publication decision
 
-The first public version is not yet declared ready for npm publication or a GitHub release. CI, install/uninstall, data-retention, and second-real-setup read-only checks are recorded above; the remaining gate from [ROADMAP.md](../ROADMAP.md) requires an explicitly approved real fix/undo:
+The engineering acceptance gates in [ROADMAP.md](../ROADMAP.md) are now recorded above: two real setups were scanned, a real fix and undo restored exact bytes, install/uninstall and data retention are documented, all checks and fixes are tested, and CI is green on Node.js 20, 22, and 24.
 
-- second-real-setup read-only discovery is now recorded above; the remaining step is to validate the fix flow there only after the user deliberately requests it;
-- demonstrate `undo` from a real, user-approved fix (not just fixtures);
-- decide whether `agent-tidy@0.1.0` should be published under the user's npm account.
+`agent-tidy@0.1.0` is still not published because publication requires the user's explicit npm account decision. No `npm publish` or GitHub release was run as part of development. The tool is ready for that decision; this record does not claim that any configuration is safe, trusted, or free of semantic conflicts.
 
 This record describes validation performed so far; it does not claim that a configuration is safe, trusted, or free of semantic conflicts.
