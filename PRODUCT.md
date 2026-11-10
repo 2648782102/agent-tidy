@@ -107,3 +107,9 @@ When a coding agent behaves unexpectedly, or before adding another capability, t
 - Is a local usage signal reliable enough to suggest "unused", or should that remain experimental?
 - How should project-local and global configuration be distinguished in the UI?
 - What is the minimum host-version matrix that can be supported honestly?
+
+## Implementation status (2026-11-11)
+
+P0 and P1 commands are implemented as a pre-release CLI: `scan`, `explain`, `fix`, `apply`, `diff`, `history`, `show`, `undo`, `add`, `report`, and `hosts`. The default scan is read-only against host configuration, emits a compact Chinese terminal summary, and writes a local HTML report. All fixes require an explicit command and are recorded in a local transaction.
+
+The first implementation deliberately reports fewer findings than the maximum theoretical set: risk detection is limited to structured declarations to reduce false positives, and “unused capability” is only a low-confidence hint when a setup has many MCP servers. Phase 4 host integration remains out of scope.

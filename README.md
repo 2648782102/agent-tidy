@@ -4,7 +4,7 @@
 
 After a while, Codex and Claude Code collect half-remembered Skills, duplicated MCP servers, stale hooks, overlapping `AGENTS.md` / `CLAUDE.md` rules, and old plugin entries. `agent-tidy` finds the small number of high-confidence problems that a person can understand, lets them choose a fix, and keeps every change reversible.
 
-The project is still a design and planning repository. No implementation exists yet.
+The project now includes a working local CLI. It remains pre-release: commands, adapter coverage, and fix behavior are being validated against real personal setups.
 
 ## The problem
 
@@ -31,7 +31,7 @@ The first usable version should let a user:
 4. Preview the exact file changes before anything is written.
 5. Restore the previous state with `agent-tidy undo`.
 
-If there is nothing worth fixing, the command prints one line and exits. It does not produce a report that the user has to find, open, and interpret.
+If there is nothing worth fixing, the command prints one line and exits. A compact HTML report is written as a secondary artifact for hosts such as Codex that can open local files, but interpreting a report is not required for the main flow.
 
 ## Non-goals
 
@@ -54,7 +54,7 @@ If there is nothing worth fixing, the command prints one line and exits. It does
 - **Explicit uncertainty.** Unknown host versions and unfamiliar file formats are reported as unsupported, not guessed.
 - **No Git requirement.** Git may be one data source, but the tool works outside a repository.
 
-## Proposed commands
+## Commands
 
 ```text
 agent-tidy              # scan, then open an interactive fix list when needed
@@ -65,7 +65,7 @@ agent-tidy diff         # show the pending fix plan
 agent-tidy undo         # restore the most recent transaction, or a selected one
 ```
 
-The command names are a design proposal, not yet a frozen CLI contract.
+Additional commands: `agent-tidy fix [id...|all]` creates a fix plan and diff without writing; `agent-tidy apply [id...|all]` previews and applies selected fixes after confirmation; `agent-tidy history`, `show`, `report`, and `hosts` provide local inspection.
 
 ## MVP scope
 
@@ -117,6 +117,28 @@ The MVP is useful only if all of the following are true with a real local setup:
 
 The direction follows a second-order need created by the rapid growth of Agent Skills, MCP servers, hooks, and personal Agent configuration. See [RESEARCH.md](RESEARCH.md) for the repository snapshot, representative projects, and the reasoning behind the scope.
 
+## Install and use
+
+Requires Node.js 20.11+.
+
+```bash
+npm install
+npm run check
+npm link
+agent-tidy scan
+```
+
+`scan` is read-only against host configuration; it writes only a local HTML report unless `--no-report` or `--json` is used. To try a fix safely:
+
+```bash
+agent-tidy fix all
+agent-tidy diff
+agent-tidy apply --yes all
+agent-tidy undo
+```
+
+`apply` re-hashes every target immediately before writing and records original bytes, permissions, and symlink targets in a local transaction. `undo` restores the recorded state. Use `--home`, `--cwd`, and `--data-dir` to test against synthetic fixtures without touching your real configuration.
+
 ## Documents
 
 - [Product requirements](PRODUCT.md)
@@ -124,13 +146,16 @@ The direction follows a second-order need created by the rapid growth of Agent S
 - [Architecture](ARCHITECTURE.md)
 - [Roadmap and delivery plan](ROADMAP.md)
 - [Development workflow](DEVELOPMENT.md)
+- [Host adapter notes](docs/ADAPTERS.md)
+- [Architecture decisions](docs/DECISIONS.md)
+- [Security and privacy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 
 ## Status
 
-Stage: `planning`.
+Stage: `pre-release implementation`.
 
-This repository currently contains only project definition, research context, and implementation planning. There is no package, CLI, release, or published artifact.
+The repository contains a TypeScript CLI, deterministic checks, reversible fix transactions, local reports, installation preflight, fixtures, and CI. There is no npm publication, GitHub release, or compiled native binary yet.
 
 ## License
 

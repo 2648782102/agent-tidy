@@ -1,6 +1,6 @@
 # Architecture
 
-Status: proposed architecture for the planning stage. No runtime code exists yet.
+Status: implemented pre-release architecture. Dated adapter decisions are recorded in [docs/DECISIONS.md](docs/DECISIONS.md).
 
 ## Shape
 
@@ -142,16 +142,9 @@ The UI is optional. `scan`, `diff`, `show`, and `undo` must work in non-interact
 
 ## Technology choices
 
-To be decided in Phase 0 after verifying the host adapters. Current constraints:
+The implementation is a TypeScript ESM CLI on Node.js 20+. `smol-toml` is the only runtime dependency. The interactive selection flow uses Node's `readline/promises` with a plain prompt fallback; there is no TUI framework, model SDK, database server, mandatory Git dependency, daemon, or MCP server.
 
-- a single installable binary or a minimal Node/TypeScript CLI;
-- no runtime model SDK;
-- no database server;
-- no mandatory Git dependency;
-- no background process for P0;
-- a small, testable TUI library or a plain prompt-based fallback.
-
-The implementation language is deliberately left open until the config formats, release channel, and local test setup are validated.
+The CLI has a thin `src/cli.ts` entry point, host adapters under `src/adapters/`, pure checks under `src/checks.ts`, fix planning and transaction handling under `src/fixes.ts`, preflight under `src/add-preflight.ts`, and HTML report rendering under `src/report.ts`.
 
 ## Test strategy
 
@@ -162,6 +155,8 @@ The implementation language is deliberately left open until the config formats, 
 - Non-TTY smoke tests for `scan`, `diff`, `show`, and `undo`.
 - Manual acceptance against a real personal setup with networking disabled.
 - No test may require a real API key, account, network service, or mutation of the user's actual home directory.
+
+As of 2026-11-11, the automated suite covers adapters, redaction, all implemented check families, TOML patching, apply/undo, concurrent modification refusal, preflight, and CLI smoke tests. Real-home validation is read-only unless the user explicitly runs an `apply` command.
 
 ## Future extension points
 

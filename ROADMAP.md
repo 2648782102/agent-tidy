@@ -1,6 +1,16 @@
 # Roadmap and delivery plan
 
-Status: planning. Dates are relative milestones, not commitments.
+Status: implementation in progress. Dates are relative milestones, not commitments.
+
+## Current checkpoint (2026-11-11)
+
+- Phase 0 complete: adapter paths, official sources, implementation language, fixture strategy, and decision log are documented.
+- Phase 1 complete in code: read-only `scan`, `explain`, compact terminal output, JSON output, HTML report, deterministic checks, fixture tests, and a read-only real-home smoke scan.
+- Phase 2 complete in code: `fix`, `apply`, `diff`, `history`, `show`, and `undo` with snapshots, re-hash refusal, rollback, and tests.
+- Phase 3 complete in code for local sources: `add <local-dir>` preflight compares names/MCP entries and reports structured risks without executing installers.
+- Phase 4 remains intentionally out of scope for the first public version.
+
+Publishing is gated by two real personal setup validations, a clean-install smoke test, and release notes. The current CLI is usable locally but is not yet published as an npm package or GitHub release.
 
 ## Decision gates
 

@@ -1,6 +1,6 @@
 # Development workflow
 
-Current status: planning repository. There is no source tree or package manifest yet.
+Current status: pre-release TypeScript CLI. The source tree, package manifest, tests, and CI workflow exist.
 
 ## Working agreement
 
@@ -12,9 +12,7 @@ Current status: planning repository. There is no source tree or package manifest
 - Never commit real personal configuration, secrets, transaction logs, or session histories.
 - Re-check host documentation when a Codex or Claude Code release changes config paths or precedence.
 
-## Suggested repository layout
-
-The layout below is a proposal for Phase 1, not yet created:
+## Repository layout
 
 ```text
 src/
@@ -23,8 +21,8 @@ src/
   inventory/    normalized records and redaction
   checks/       pure deterministic checks
   fixes/        change planning and preview
-  transactions/ backup, apply, rollback, undo
-  tui/          optional interactive view
+  transactions/ backup, apply, rollback, undo (currently src/fixes.ts)
+  tui/          optional interactive view (currently src/cli.ts)
 tests/
   fixtures/     synthetic host configs and Skills
   unit/
@@ -41,20 +39,19 @@ docs/
 - Manual validation may read real config only with explicit user awareness and redacted output.
 - A test must not execute a Skill, MCP command, hook, plugin, or installer.
 
-## Commands to define in Phase 0
-
-The implementation will add commands equivalent to:
+## Local commands
 
 ```text
-install dependencies
-run type checking
-run unit tests
-run integration tests
-run all checks
-build a local binary
+npm install
+npm run typecheck
+npm test
+npm run build
+npm run check
+npm link
+agent-tidy scan --home /tmp/fixture/home --cwd /tmp/fixture/project --data-dir /tmp/fixture/data
 ```
 
-Exact commands will depend on the selected language and package manager. They must be documented here before source code is added.
+`npm run check` runs type checking, all tests, and the build. A GitHub Actions workflow runs the same checks on Node.js 20, 22, and 24.
 
 ## Definition of a reviewable change
 
@@ -70,7 +67,7 @@ A pull request or local change should include:
 
 ## Release policy
 
-No release is planned until Phase 2 is complete. A future release must include:
+A future npm/GitHub release must include:
 
 - supported host versions and platforms;
 - exact config paths inspected;
@@ -79,6 +76,8 @@ No release is planned until Phase 2 is complete. A future release must include:
 - a reproducible build process;
 - known limits in release notes.
 
+Phase 2 transaction safety is implemented and covered by automated tests, but publishing is intentionally deferred until two real personal setups have been validated and a clean-install smoke test is recorded.
+
 ## Decision log
 
-Record significant product or architecture decisions in `docs/decisions/` when implementation starts. Keep each decision short: context, choice, alternatives, consequences, and date.
+Significant product and architecture decisions are recorded in [docs/DECISIONS.md](docs/DECISIONS.md). Keep each decision short: context, choice, alternatives, consequences, and date.
