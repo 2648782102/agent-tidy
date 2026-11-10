@@ -4,7 +4,7 @@
 
 After a while, Codex and Claude Code collect half-remembered Skills, duplicated MCP servers, stale hooks, overlapping `AGENTS.md` / `CLAUDE.md` rules, and old plugin entries. `agent-tidy` finds the small number of high-confidence problems that a person can understand, lets them choose a fix, and keeps every change reversible.
 
-The project now includes a working local CLI. It remains pre-release: commands, adapter coverage, and fix behavior are being validated against real personal setups.
+The project has a published local CLI. Version `0.1.0` is available from npm and GitHub Releases; commands, adapter coverage, and fix behavior remain intentionally conservative.
 
 ## The problem
 
@@ -121,6 +121,15 @@ The direction follows a second-order need created by the rapid growth of Agent S
 
 Requires Node.js 20.11+.
 
+To install the published package:
+
+```bash
+npm install -g agent-tidy@0.1.0
+agent-tidy scan
+```
+
+For local development from a checkout:
+
 ```bash
 npm install
 npm run check
@@ -149,16 +158,16 @@ To remove a linked development install, run `npm unlink -g agent-tidy` from anot
 - [Roadmap and delivery plan](ROADMAP.md)
 - [Development workflow](DEVELOPMENT.md)
 - [Host adapter notes](docs/ADAPTERS.md)
-- [Pre-release acceptance record](docs/ACCEPTANCE.md)
+- [First-public-release acceptance record](docs/ACCEPTANCE.md)
 - [Architecture decisions](docs/DECISIONS.md)
 - [Security and privacy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 
 ## Status
 
-Stage: `pre-release implementation`.
+Stage: `first public release`.
 
-The repository contains a TypeScript CLI, deterministic checks, reversible fix transactions, local reports, installation preflight, fixtures, and CI. There is no npm publication, GitHub release, or compiled native binary yet.
+The repository contains a TypeScript CLI, deterministic checks, reversible fix transactions, local reports, installation preflight, fixtures, and CI. `agent-tidy@0.1.0` is published on [npm](https://www.npmjs.com/package/agent-tidy/v/0.1.0), with the matching [GitHub Release `v0.1.0`](https://github.com/2648782102/agent-tidy/releases/tag/v0.1.0) and release notes. A compiled native binary is not provided.
 
 ## License
 

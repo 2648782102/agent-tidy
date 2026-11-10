@@ -1,4 +1,4 @@
-# Pre-release acceptance record
+# First-public-release acceptance record
 
 Date: 2026-11-11 (Asia/Shanghai)
 Implementation commit: `b0aef8d8abcce2a6e83a473155b8cdf5597ef893`
@@ -76,6 +76,6 @@ This is a repeatable, synthetic-fixture install/uninstall and retention procedur
 
 The engineering acceptance gates in [ROADMAP.md](../ROADMAP.md) are now recorded above: two real setups were scanned, a real fix and undo restored exact bytes, install/uninstall and data retention are documented, all checks and fixes are tested, and CI is green on Node.js 20, 22, and 24.
 
-`agent-tidy@0.1.0` is still not published because publication requires the user's explicit npm account decision. No `npm publish` or GitHub release was run as part of development. The tool is ready for that decision; this record does not claim that any configuration is safe, trusted, or free of semantic conflicts.
+The user approved publication. `agent-tidy@0.1.0` was published to [npm](https://www.npmjs.com/package/agent-tidy/v/0.1.0), the annotated tag `v0.1.0` was pushed, and the non-prerelease [GitHub Release](https://github.com/2648782102/agent-tidy/releases/tag/v0.1.0) was published with release notes. Registry verification succeeded through `npm view agent-tidy@0.1.0`; the published tarball was installed in an isolated consumer, `agent-tidy version` returned `0.1.0`, and an isolated read-only `scan --json --no-report` returned 0 findings and 2 hosts. The release API reports `draft: false` and `prerelease: false`. This record does not claim that any configuration is safe, trusted, or free of semantic conflicts.
 
 This record describes validation performed so far; it does not claim that a configuration is safe, trusted, or free of semantic conflicts.

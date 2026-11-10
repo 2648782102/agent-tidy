@@ -1,6 +1,6 @@
 # Development workflow
 
-Current status: pre-release TypeScript CLI. The source tree, package manifest, tests, and CI workflow exist.
+Current status: first public release `0.1.0` is published. The source tree, package manifest, tests, and CI workflow exist.
 
 ## Working agreement
 
@@ -69,7 +69,7 @@ A pull request or local change should include:
 
 ## Release policy
 
-A future npm/GitHub release must include:
+A subsequent npm/GitHub release must include:
 
 - supported host versions and platforms;
 - exact config paths inspected;
@@ -78,7 +78,7 @@ A future npm/GitHub release must include:
 - a reproducible build process;
 - known limits in release notes.
 
-Phase 2 transaction safety and Phase 3 local-source preflight are implemented and covered by automated tests. Clean-install, global-install, second real setup, and real fix/undo validation are recorded in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). Publication remains intentionally deferred until the user explicitly decides to publish under their npm account.
+Phase 2 transaction safety and Phase 3 local-source preflight are implemented and covered by automated tests. Clean-install, global-install, second real setup, and real fix/undo validation are recorded in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). The first public release was published as `agent-tidy@0.1.0` on [npm](https://www.npmjs.com/package/agent-tidy/v/0.1.0) and [GitHub Releases](https://github.com/2648782102/agent-tidy/releases/tag/v0.1.0); its notes cover supported scope, validation, and limits.
 
 ## Decision log
 
