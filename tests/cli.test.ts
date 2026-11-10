@@ -4,12 +4,18 @@ import { test } from "node:test";
 import { resolve } from "node:path";
 import { codexConfig, createFixture, skillMarkdown, writeFixtureFile } from "./helpers.js";
 
-const cli = resolve(import.meta.dirname, "../dist/cli.js");
+const projectRoot = resolve(import.meta.dirname, "..");
+const cli = resolve(projectRoot, "src/cli.ts");
+
+function cliArgs(args: string[]): string[] {
+  return ["--import", "tsx", cli, ...args];
+}
 
 function run(args: string[]): { code: number; stdout: string; stderr: string } {
-  const result = spawnSync(process.execPath, [cli, ...args], { encoding: "utf8" });
+  const result = spawnSync(process.execPath, cliArgs(args), { encoding: "utf8", cwd: projectRoot });
   return { code: result.status ?? 1, stdout: result.stdout, stderr: result.stderr };
 }
+
 
 test("CLI help and version work", () => {
   assert.match(run(["--help"]).stdout, /agent-tidy/);
