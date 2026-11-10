@@ -41,3 +41,10 @@
 - Choice: ship CLI/TUI, compact output, an HTML report path, and JSON output first; do not install hooks or require host-specific UI integration.
 - Alternatives: MCP server, Codex plugin, or automatic hook installation.
 - Consequences: less magic and a smaller trust surface; users must run `agent-tidy` themselves until integration is independently validated.
+
+## 2026-11-11 — JSON mode is equivalent, explicit, and byte-safe
+
+- Context: agents and scripts need a non-interactive flow, while JSON output is easy to copy into logs and terminal scrollback.
+- Choice: `fix --json` creates a pending plan, `apply --json` applies it without an interactive prompt, and `undo --json` restores it; plan, transaction, history, and undo JSON omit Base64 configuration bytes, backup paths, and snapshots.
+- Alternatives: keep JSON as preview-only, require a TTY for apply, or serialize full transaction records.
+- Consequences: scripted use is deterministic and does not silently write during preview; an explicit `apply` command remains the user's authorization boundary, and configuration contents stay in local transaction files rather than JSON output.

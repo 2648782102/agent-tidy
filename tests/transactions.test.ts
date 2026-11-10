@@ -66,3 +66,32 @@ test("undo removes the disabled directory after a skill rename", async () => {
   await assert.rejects(stat(disabledPath));
   assert.equal((await stat(join(fixture.roots.codexHome ?? "", "skills/demo-b/SKILL.md"))).isFile(), true);
 });
+
+test("apply and undo a JSON MCP disable without changing other settings", async () => {
+  const fixture = await createFixture();
+  const settings = JSON.stringify({
+    mcpServers: {
+      broken: { command: "/definitely/missing/claude-server", args: ["run"] },
+    },
+    permissions: { allow: ["Read"] },
+  }, null, 2);
+  const configPath = await writeFixtureFile(fixture.root, "home/.claude/settings.json", settings);
+  const original = await readFile(configPath);
+  const inventory = await buildInventory(fixture.roots);
+  const findings = await runChecks(inventory);
+  const stale = findings.find((finding) => finding.checkId === "stale-mcp");
+  assert.ok(stale);
+  const fix = stale.availableFixes.find((item) => item.kind === "disable-mcp-json");
+  assert.ok(fix);
+
+  const plan = await buildChangePlan(inventory, findings, [fix.id]);
+  const transaction = await applyPlan(inventory, plan, "disable broken JSON MCP");
+  assert.equal(transaction.status, "applied");
+  const changed = JSON.parse(await readFile(configPath, "utf8"));
+  assert.equal(changed.mcpServers.broken.disabled, true);
+  assert.deepEqual(changed.permissions, { allow: ["Read"] });
+
+  const undone = await undoTransaction(fixture.roots, transaction.id);
+  assert.equal(undone.status, "undone");
+  assert.deepEqual(await readFile(configPath), original);
+});

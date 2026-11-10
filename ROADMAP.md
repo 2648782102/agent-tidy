@@ -10,7 +10,7 @@ Status: implementation in progress. Dates are relative milestones, not commitmen
 - Phase 3 complete in code for local sources: `add <local-dir>` preflight compares names/MCP entries and reports structured risks without executing installers.
 - Phase 4 remains intentionally out of scope for the first public version.
 
-Publishing is gated by two real personal setup validations, a clean-install smoke test, and release notes. The current CLI is usable locally but is not yet published as an npm package or GitHub release.
+Publishing is gated by a second real personal setup validation, an explicitly approved real fix/undo demonstration, and release notes. Clean-install, global-install, and fixture transaction smoke tests are already recorded in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). The current CLI is usable locally but is not yet published as an npm package or GitHub release.
 
 ## Decision gates
 
@@ -128,7 +128,7 @@ Exit criteria:
 
 A first public version is ready only when:
 
-- Phase 1 and Phase 2 exit criteria are met on two real personal setups;
+- Phase 1 and Phase 2 exit criteria are met on two real personal setups, including a real fix/undo approved by the user;
 - README explains the product in one screen;
 - install/uninstall is documented;
 - every check and fix has tests;

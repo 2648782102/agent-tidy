@@ -16,19 +16,21 @@ Current status: pre-release TypeScript CLI. The source tree, package manifest, t
 
 ```text
 src/
-  cli/          command parsing and terminal output
-  adapters/     host-specific config discovery
-  inventory/    normalized records and redaction
-  checks/       pure deterministic checks
-  fixes/        change planning and preview
-  transactions/ backup, apply, rollback, undo (currently src/fixes.ts)
-  tui/          optional interactive view (currently src/cli.ts)
+  cli.ts        command parsing, terminal output, and optional prompt
+  adapters/     host-specific config discovery and TOML block handling
+  checks.ts     deterministic checks and fix descriptors
+  fixes.ts      change planning, preview, backup, apply, rollback, and undo
+  add-preflight.ts  local-source installation preflight
+  report.ts     local HTML report rendering
+  types.ts      normalized inventory and transaction types
+  util.ts       redaction, hashing, atomic writes, and capability detection
 tests/
-  fixtures/     synthetic host configs and Skills
-  unit/
-  integration/
+  helpers.ts    synthetic host roots and fixture helpers
+  *.test.ts     adapter, check, fix, CLI, and transaction tests
 docs/
-  adapters/     host-specific path and precedence notes
+  ADAPTERS.md   host-specific path and precedence notes
+  DECISIONS.md  architecture decisions
+  ACCEPTANCE.md validation and release-gate record
 ```
 
 ## Local validation principles
@@ -76,7 +78,7 @@ A future npm/GitHub release must include:
 - a reproducible build process;
 - known limits in release notes.
 
-Phase 2 transaction safety is implemented and covered by automated tests, but publishing is intentionally deferred until two real personal setups have been validated and a clean-install smoke test is recorded.
+Phase 2 transaction safety and Phase 3 local-source preflight are implemented and covered by automated tests. Clean-install and global-install smoke tests are recorded in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). Publishing remains intentionally deferred until a second real personal setup and an explicitly approved real fix/undo flow are validated.
 
 ## Decision log
 

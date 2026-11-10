@@ -10,6 +10,8 @@ import {
   listTransactions,
   loadTransaction,
   planFromIds,
+  publicPlan,
+  publicTransaction,
   readPlanArtifact,
   showTransaction,
   transactionSummary,
@@ -226,24 +228,30 @@ async function commandFix(args: string[], options: Options, apply: boolean): Pro
   const ids = resolveFixIds(result, args);
   const { plan, diff } = await planFromIds(result.inventory, result.findings, ids);
   const pendingPath = await writePlanArtifact(result.inventory.roots, plan);
-  if (options.json) {
-    console.log(JSON.stringify({ planId: plan.id, selectedFixIds: plan.selectedFixIds, changes: plan.changes, diff, pendingPath, applied: false }, null, 2));
+  if (apply) {
+    const confirmed = options.json ? true : await confirm(`确认应用 ${plan.changes.length} 个变更？`, options);
+    if (!confirmed) {
+      if (options.json) console.log(JSON.stringify({ ...publicPlan(plan), diff, pendingPath, applied: false, cancelled: true }, null, 2));
+      else console.log("已取消，没有写入用户配置。");
+      return 1;
+    }
+    const transaction = await applyPlan(result.inventory, plan, transactionSummary(plan));
+    if (options.json) console.log(JSON.stringify({ ...publicTransaction(transaction), diff, pendingPath, applied: true }, null, 2));
+    else {
+      console.log(`修复计划 ${plan.id} · ${transactionSummary(plan)}`);
+      console.log(redact(diff));
+      console.log(`待应用计划：${pendingPath}`);
+      console.log(`已应用事务 ${transaction.id}；撤销：agent-tidy undo ${transaction.id}`);
+    }
     return 0;
   }
-  console.log(`修复计划 ${plan.id} · ${transactionSummary(plan)}`);
-  console.log(redact(diff));
-  console.log(`待应用计划：${pendingPath}`);
-  if (!apply) {
+  if (options.json) console.log(JSON.stringify({ ...publicPlan(plan), diff, pendingPath, applied: false }, null, 2));
+  else {
+    console.log(`修复计划 ${plan.id} · ${transactionSummary(plan)}`);
+    console.log(redact(diff));
+    console.log(`待应用计划：${pendingPath}`);
     console.log("未写入用户配置。确认后运行：agent-tidy apply --yes <id...|all>");
-    return 0;
   }
-  const confirmed = await confirm(`确认应用 ${plan.changes.length} 个变更？`, options);
-  if (!confirmed) {
-    console.log("已取消，没有写入用户配置。");
-    return 1;
-  }
-  const transaction = await applyPlan(result.inventory, plan, transactionSummary(plan));
-  console.log(`已应用事务 ${transaction.id}；撤销：agent-tidy undo ${transaction.id}`);
   return 0;
 }
 
@@ -264,7 +272,7 @@ async function commandDiff(options: Options): Promise<number> {
 async function commandHistory(options: Options): Promise<number> {
   const roots = rootsFromOptions(options);
   const transactions = await listTransactions(roots);
-  if (options.json) console.log(JSON.stringify(transactions.map(({ snapshots, ...transaction }) => transaction), null, 2));
+  if (options.json) console.log(JSON.stringify(transactions.map(publicTransaction), null, 2));
   else if (transactions.length === 0) console.log("没有本地事务。");
   else for (const transaction of transactions) console.log(`${transaction.id}\t${transaction.createdAt}\t${transaction.status}\t${transaction.summary}`);
   return 0;
@@ -279,7 +287,7 @@ async function commandShow(args: string[], options: Options): Promise<number> {
 async function commandUndo(args: string[], options: Options): Promise<number> {
   const roots = rootsFromOptions(options);
   const transaction = await undoTransaction(roots, args[0]);
-  if (options.json) console.log(JSON.stringify({ ...transaction, snapshots: undefined }, null, 2));
+  if (options.json) console.log(JSON.stringify(publicTransaction(transaction), null, 2));
   else console.log(`已撤销事务 ${transaction.id}，恢复 ${transaction.snapshots.length} 个路径。`);
   return 0;
 }

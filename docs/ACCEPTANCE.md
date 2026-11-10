@@ -2,20 +2,22 @@
 
 Date: 2026-11-11 (Asia/Shanghai)
 Implementation commit: `b0aef8d8abcce2a6e83a473155b8cdf5597ef893`
-Validation updates: `5cbe365` and later working-tree changes recorded here
+Validation updates: `5cbe365`, `e4f32ff`, and later working-tree changes recorded here
 
 ## Automated checks
 
-- `npm run check`: passed (typecheck, 23 tests, build), including a clean-checkout simulation with the ignored `dist/` directory removed so CLI tests no longer depend on a previous local build.
+- `npm run check`: passed (typecheck, 25 tests, build), including a clean-checkout simulation with the ignored `dist/` directory removed so CLI tests no longer depend on a previous local build.
 - Test discovery uses explicit test file arguments. Node 20's test runner did not resolve `tests/**/*.test.ts` on GitHub Actions; the explicit list is stable across the Node 20/22/24 CI matrix.
 - CI uses a per-ref concurrency group so rapid pushes cancel stale runs instead of producing misleading cancelled jobs.
 - Check coverage includes duplicates, shadowing, stale MCP commands, duplicate MCP entries, missing references, structured risky declarations, deterministic instruction overlap, and the low-confidence unused-capability hint.
-- Fix coverage includes TOML MCP disabling, JSON MCP disabling, Skill directory disabling, apply/undo, concurrent modification refusal, transaction history/show, and removal of disabled-directory residue after undo.
-- A copied shape of the current user's real `~/.codex/config.toml` was scanned, fixed, and undone in a temporary fixture. The source file was read only and was not modified.
+- Fix coverage includes TOML MCP disabling, JSON MCP disabling, Skill directory disabling, apply/undo, concurrent modification refusal, transaction history/show, and removal of disabled-directory residue after undo. The JSON MCP test asserts that unrelated settings remain intact through apply and undo.
+- A copied shape of the current user's real `~/.codex/config.toml` was scanned, fixed, and undone in a temporary fixture. The source file was read only and was not modified. In CI and other environments without that file, the test writes a synthetic TOML MCP config as a fallback so the same transaction still exercises the full scan/fix/undo flow.
+- CLI-level `fix --json` → `apply --json` → `undo --json` applies a reversible transaction and keeps original config bytes intact. The JSON plan/transaction/history outputs omit Base64 file bytes, pending plans, and backup paths.
 - `npm audit --omit=dev`: 0 production vulnerabilities.
-- `npm pack --dry-run`: 30 files, 45.6 kB tarball; only `dist`, `README.md`, `LICENSE`, and `package.json` are published.
+- `npm pack --dry-run`: 30 files, 45.8 kB tarball; only `dist`, `README.md`, `LICENSE`, and `package.json` are published.
 - Clean-install smoke test from the packed tarball in a temporary consumer directory: `agent-tidy version` returned `0.1.0`; isolated `scan --json --no-report` returned 0 findings and 2 hosts.
-- Local global-install smoke test through `npm install -g . --prefix <temp>`: `agent-tidy version` and `agent-tidy --help` worked.
+- Local global-install smoke test through `npm install -g . --prefix <temp>`: `agent-tidy version` and `agent-tidy --help` worked; `npm uninstall -g agent-tidy --prefix <temp>` removed the linked binary.
+- `--no-report` was verified not to create `latest-report.html` in an isolated data directory.
 
 ## Real personal setup smoke test
 
@@ -50,6 +52,21 @@ Verified outcomes:
 - `add` detected a duplicate Skill name and structured shell declarations without executing the source.
 - A concurrent modification between plan creation and apply was rejected by re-hash verification in the automated suite.
 
+## Install, uninstall, and local data
+
+For a checkout:
+
+```bash
+npm install
+npm run check
+npm link
+agent-tidy scan
+```
+
+To remove the linked command, run `npm unlink -g agent-tidy` from another directory. For a packaged install, use `npm install -g <tarball-or-package>` and remove it with `npm uninstall -g agent-tidy`. `agent-tidy` does not create files inside Git repositories it scans; local reports, pending plans, and transaction snapshots are stored under `~/.local/share/agent-tidy` by default or under `--data-dir`. After `undo` and a final visual review, that directory can be removed with `rm -rf ~/.local/share/agent-tidy` if the user wants no retained local data. Removal of the tool does not automatically delete those files.
+
+This is a repeatable, synthetic-fixture install/uninstall and retention procedure. It does not replace the pending second real personal setup validation.
+
 ## Remaining publication gates
 
 The first public version is not yet declared ready for npm publication or a GitHub release. Remaining gates from [ROADMAP.md](../ROADMAP.md):
@@ -57,7 +74,7 @@ The first public version is not yet declared ready for npm publication or a GitH
 - validate the fix flow on a second real personal setup, with explicit user awareness and read-only output until a fix is deliberately requested;
 - demonstrate `undo` from a real, user-approved fix (not just fixtures);
 - record a repeatable clean-install/uninstall and data-retention note;
-- verify the pushed GitHub Actions run on Node.js 20, 22, and 24 (earlier runs exposed clean-checkout CLI test failure and Node 20 test glob behavior; local validation now covers both fixes);
+- verify the pushed GitHub Actions run on Node.js 20, 22, and 24 (earlier runs exposed clean-checkout CLI test failure, Node 20 test glob behavior, and a real-home-only test fixture; local validation now covers all three fixes);
 - decide whether `agent-tidy@0.1.0` should be published under the user's npm account.
 
 This record describes validation performed so far; it does not claim that a configuration is safe, trusted, or free of semantic conflicts.

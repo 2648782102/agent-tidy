@@ -36,7 +36,7 @@ A host adapter is a version-aware, read-only description of:
 
 Adapters must never infer a path by scanning the whole home directory. They return explicit discovered paths with a source label.
 
-Proposed first adapters:
+Implemented first adapters:
 
 - `codex`: Codex CLI / Codex desktop local configuration.
 - `claude-code`: Claude Code user/project Skills, settings, plugins, MCP entries, hooks, and instruction files.
@@ -80,7 +80,7 @@ ChangePlan → Change[]
 Change → { path, operation, beforeHash, afterBytes, rationale, findingId }
 ```
 
-Supported P0 operations are limited to:
+Implemented P0 operations are limited to:
 
 - add an explicit disabled marker in a supported config format;
 - rename a duplicate Skill directory or file within its existing scope;
@@ -157,6 +157,8 @@ The CLI has a thin `src/cli.ts` entry point, host adapters under `src/adapters/`
 - No test may require a real API key, account, network service, or mutation of the user's actual home directory.
 
 As of 2026-11-11, the automated suite covers adapters, redaction, all implemented check families, TOML patching, apply/undo, concurrent modification refusal, preflight, and CLI smoke tests. Real-home validation is read-only unless the user explicitly runs an `apply` command.
+
+Machine-readable JSON output is a first-class non-interactive flow: `fix --json` creates a pending plan, `apply --json` applies that plan without an interactive prompt, and `undo --json` restores it. Plan and transaction JSON omit file bytes and backup paths so configuration contents are not copied into terminal scrollback or shell logs.
 
 ## Future extension points
 

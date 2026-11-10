@@ -155,6 +155,23 @@ export interface ChangePlan {
   findingIds: string[];
 }
 
+export function publicPlan(plan: ChangePlan): Omit<ChangePlan, "snapshots" | "changes"> & { changes: Array<Omit<PlannedChange, "afterBytesBase64">> } {
+  const { snapshots: _snapshots, changes, ...rest } = plan;
+  return {
+    ...rest,
+    changes: changes.map(({ afterBytesBase64: _afterBytesBase64, ...change }) => change),
+  };
+}
+
+export function publicTransaction(transaction: Transaction): Omit<Transaction, "snapshots" | "changes"> & { changes: Array<Omit<PlannedChange, "afterBytesBase64">>; snapshots: Array<Omit<FileSnapshot, "bytesBase64" | "backupPath" | "renamedTo">> } {
+  const { snapshots, changes, ...rest } = transaction;
+  return {
+    ...rest,
+    changes: changes.map(({ afterBytesBase64: _afterBytesBase64, ...change }) => change),
+    snapshots: snapshots.map(({ bytesBase64: _bytesBase64, backupPath: _backupPath, renamedTo: _renamedTo, ...snapshot }) => snapshot),
+  };
+}
+
 export async function buildChangePlan(inventory: Inventory, findings: Finding[], fixIds: string[]): Promise<ChangePlan> {
   const selected = new Set(fixIds);
   const targets: Array<{ finding: Finding; fix: Fix }> = [];

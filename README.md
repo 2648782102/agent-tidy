@@ -128,7 +128,7 @@ npm link
 agent-tidy scan
 ```
 
-`scan` is read-only against host configuration; it writes only a local HTML report unless `--no-report` or `--json` is used. To try a fix safely:
+`scan` is read-only against host configuration; it writes only a local HTML report under `~/.local/share/agent-tidy/latest-report.html` unless `--no-report` or `--json` is used. To try a fix safely against synthetic fixture roots:
 
 ```bash
 agent-tidy fix all
@@ -139,6 +139,8 @@ agent-tidy undo
 
 `apply` re-hashes every target immediately before writing and records original bytes, permissions, and symlink targets in a local transaction. `undo` restores the recorded state. Use `--home`, `--cwd`, and `--data-dir` to test against synthetic fixtures without touching your real configuration.
 
+To remove a linked development install, run `npm unlink -g agent-tidy` from another directory; for a global package install, run `npm uninstall -g agent-tidy`. Reports, pending plans, and transaction backups are local data under `~/.local/share/agent-tidy` (or `--data-dir`) and are not removed automatically. After undoing transactions and reviewing the contents, remove that directory if you want no retained local data.
+
 ## Documents
 
 - [Product requirements](PRODUCT.md)
@@ -147,6 +149,7 @@ agent-tidy undo
 - [Roadmap and delivery plan](ROADMAP.md)
 - [Development workflow](DEVELOPMENT.md)
 - [Host adapter notes](docs/ADAPTERS.md)
+- [Pre-release acceptance record](docs/ACCEPTANCE.md)
 - [Architecture decisions](docs/DECISIONS.md)
 - [Security and privacy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
