@@ -70,10 +70,11 @@ When a coding agent behaves unexpectedly, or before adding another capability, t
 
 ### P1: preflight
 
-- `add <source>` resolves a local directory or supported GitHub source.
+- `add <local-dir>` resolves a local directory without executing install scripts.
 - It compares names, IDs, and declared capabilities against the active inventory.
 - It reports conflicts and risky declarations before installation.
 - It does not install anything in the first version of this feature.
+- Pinned GitHub sources are explicitly deferred; no network fetch or remote source execution is part of the first version.
 
 ### P1: change history
 
@@ -110,6 +111,6 @@ When a coding agent behaves unexpectedly, or before adding another capability, t
 
 ## Implementation status (2026-11-11)
 
-P0 and P1 commands are implemented as a pre-release CLI: `scan`, `explain`, `fix`, `apply`, `diff`, `history`, `show`, `undo`, `add`, `report`, and `hosts`. The default scan is read-only against host configuration, emits a compact Chinese terminal summary, and writes a local HTML report. All fixes require an explicit command and are recorded in a local transaction.
+P0 and P1 commands are implemented as a pre-release CLI: `scan`, `explain`, `fix`, `apply`, `diff`, `history`, `show`, `undo`, `add`, `report`, and `hosts`. `add` accepts local directories only. The default scan is read-only against host configuration, emits a compact Chinese terminal summary, and writes a local HTML report. All fixes require an explicit command and are recorded in a local transaction.
 
 The first implementation deliberately reports fewer findings than the maximum theoretical set: risk detection is limited to structured declarations to reduce false positives, and “unused capability” is only a low-confidence hint when a setup has many MCP servers. Phase 4 host integration remains out of scope.

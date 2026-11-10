@@ -31,6 +31,8 @@ OK：已检查 4 个路径 · 2 个 host · 没有发现高置信、可操作的
 
 No fix was applied to the real configuration. The HTML report was written locally only. JSON mode intentionally omits `reportPath` because no report is written in that mode.
 
+A second real setup was inspected read-only by pointing `--cwd` at a project containing `.codex/config.toml` and `AGENTS.md` while retaining the current user's global Codex configuration. The scan inspected 6 paths across 2 hosts and found one high-confidence `duplicate-mcp` finding, with one available fix and no unsupported items. A SHA-256 hash of the project config before and after the scan was identical, confirming that no host configuration was written. Only redacted paths, check IDs, severities, and fix counts are recorded here. No `apply` was run against either real setup.
+
 ## End-to-end fixture workflow
 
 A temporary fixture with one stale MCP command and two duplicate Skills was used to run:
@@ -70,9 +72,9 @@ This is a repeatable, synthetic-fixture install/uninstall and retention procedur
 
 ## Remaining publication gates
 
-The first public version is not yet declared ready for npm publication or a GitHub release. CI, install/uninstall, and data-retention gates are recorded above; remaining gates from [ROADMAP.md](../ROADMAP.md) require a second real personal setup and an explicitly approved real fix/undo:
+The first public version is not yet declared ready for npm publication or a GitHub release. CI, install/uninstall, data-retention, and second-real-setup read-only checks are recorded above; the remaining gate from [ROADMAP.md](../ROADMAP.md) requires an explicitly approved real fix/undo:
 
-- validate the fix flow on a second real personal setup, with explicit user awareness and read-only output until a fix is deliberately requested;
+- second-real-setup read-only discovery is now recorded above; the remaining step is to validate the fix flow there only after the user deliberately requests it;
 - demonstrate `undo` from a real, user-approved fix (not just fixtures);
 - decide whether `agent-tidy@0.1.0` should be published under the user's npm account.
 

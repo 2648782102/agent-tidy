@@ -60,7 +60,7 @@ If there is nothing worth fixing, the command prints one line and exits. A compa
 agent-tidy              # scan, then open an interactive fix list when needed
 agent-tidy scan         # read-only scan with a compact result list
 agent-tidy explain <id> # explain where one Skill, MCP, hook, or rule comes from
-agent-tidy add <source> # preflight a Skill or plugin source before installing it
+agent-tidy add <local-dir> # preflight a local Skill or plugin source before installing it
 agent-tidy diff         # show the pending fix plan
 agent-tidy undo         # restore the most recent transaction, or a selected one
 ```

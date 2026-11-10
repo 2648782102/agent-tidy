@@ -163,6 +163,6 @@ Machine-readable JSON output is a first-class non-interactive flow: `fix --json`
 ## Future extension points
 
 - Additional host adapters behind a stable `HostAdapter` interface.
-- `add` preflight for local directories and pinned GitHub refs.
+- `add` preflight for pinned GitHub refs, only after a separate no-execution, no-network-trust design and explicit product decision.
 - A host hook that surfaces only newly introduced high-confidence risks.
 - A/B "Skill trial" runner as a separate product decision, not part of the P0 architecture.

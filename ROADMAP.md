@@ -7,7 +7,7 @@ Status: implementation in progress. Dates are relative milestones, not commitmen
 - Phase 0 complete: adapter paths, official sources, implementation language, fixture strategy, and decision log are documented.
 - Phase 1 complete in code: read-only `scan`, `explain`, compact terminal output, JSON output, HTML report, deterministic checks, fixture tests, and a read-only real-home smoke scan.
 - Phase 2 complete in code: `fix`, `apply`, `diff`, `history`, `show`, and `undo` with snapshots, re-hash refusal, rollback, and tests.
-- Phase 3 complete in code for local sources: `add <local-dir>` preflight compares names/MCP entries and reports structured risks without executing installers.
+- Phase 3 complete in code for local sources: `add <local-dir>` preflight compares names/MCP entries and reports structured risks without executing installers. Pinned GitHub sources are explicitly deferred to a later decision.
 - Phase 4 remains intentionally out of scope for the first public version.
 
 Publishing is gated by a second real personal setup validation, an explicitly approved real fix/undo demonstration, and release notes. Clean-install, global-install, and fixture transaction smoke tests are already recorded in [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md). The current CLI is usable locally but is not yet published as an npm package or GitHub release.
@@ -87,7 +87,7 @@ Goal: `agent-tidy add <source>` warns before a user adds another overlapping cap
 
 Work:
 
-- Read a local directory and pinned GitHub source without executing install scripts.
+- Read a local directory without executing install scripts; a pinned GitHub source is not part of the first version.
 - Compare name/ID, declared capabilities, and MCP commands with the active inventory.
 - Produce a short conflict/risk preview.
 - Keep installation outside `agent-tidy` for this phase.
